@@ -40,7 +40,7 @@ In this project I opted for [ESLint](https://eslint.org/), [Prettier](https://pr
     <td>
       <a href="https://github.com/ruanramalho">
       <img src="https://avatars.githubusercontent.com/u/58890915?v=4" width=120>
-        <p align="center">Matheus Henrique</p>
+        <p align="center">Ruan Ramalho</p>
       </a>
     </td>
 </table>
