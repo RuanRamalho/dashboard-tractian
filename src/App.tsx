@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   DesktopOutlined,
@@ -7,12 +7,52 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import Api from './services/api';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
+interface IActives {
+  id: number;
+  model: string;
+}
+
+interface ICompanies {
+  id: number;
+  name: string;
+}
+
+const defaultItemsActive: IActives[] = [];
+const defaultItemsCompanies: ICompanies[] = [];
+
 function App() {
   const [collapsed, setCollapsed] = useState(false);
+  const [actives, setActives]: [
+    IActives[],
+    (item: IActives[]) => void,
+  ] = useState(defaultItemsActive);
+
+  const [companies, setCompanies]: [
+    ICompanies[],
+    (item: ICompanies[]) => void,
+  ] = useState(defaultItemsCompanies);
+
+  useEffect(() => {
+    Api.get('/assets')
+      .then(response => console.log(setActives(response.data)))
+      .catch(error => {
+        console.log(`Ops! Algo deu errado ${error}`);
+      });
+  }, []);
+
+  useEffect(() => {
+    Api.get('/companies')
+      .then(response => console.log(setCompanies(response.data)))
+      .catch(error => {
+        console.log(`Ops! Algo deu errado ${error}`);
+      });
+  }, []);
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
@@ -49,7 +89,13 @@ function App() {
             className="site-layout-background"
             style={{ padding: 24, minHeight: 360 }}
           >
-            Bill is a cat.
+            {companies.map(item => (
+              <>
+                <ul>
+                  <li>{item.name}</li>
+                </ul>
+              </>
+            ))}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
