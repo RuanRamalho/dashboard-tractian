@@ -4,6 +4,7 @@ import { ConfigProvider } from 'antd';
 import ptBR from 'antd/lib/locale/pt_BR';
 import App from './App';
 import 'antd/dist/antd.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
