@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Table, Space, Modal, Button, Input } from 'antd';
-import Item from 'antd/lib/list/Item';
+import { InputContent } from './styles';
 import Api from '../../services/api';
 
 interface ICompanies {
@@ -22,6 +22,14 @@ interface IUsers {
   companyId: number;
 }
 
+interface IOnlyUsers {
+  id: number;
+  name: string;
+  email: string;
+  company: string;
+  unity: string;
+}
+
 interface IColumns {
   title: string;
   dataIndex: string;
@@ -33,6 +41,13 @@ function Companies() {
   const [companies, setCompanies] = useState<ICompanies[]>([]);
   const [units, setUnits] = useState<IUnits[]>([]);
   const [users, setUsers] = useState<IUsers[]>([]);
+  const [onlyUser, setOnlyUser] = useState<IOnlyUsers>({
+    id: 0,
+    name: '',
+    email: '',
+    company: '',
+    unity: '',
+  });
   const [tableInfo, setTableInfo] = useState<any>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -98,10 +113,16 @@ function Companies() {
       title: 'Action',
       key: 'action',
       dataIndex: 'action',
-      render: (text: string, record: string) => (
+      render: (text: string, record: any) => (
         <>
           <Space size="middle">
-            <Button type="primary" onClick={() => setIsModalVisible(true)}>
+            <Button
+              type="primary"
+              onClick={() => {
+                setOnlyUser(record);
+                setIsModalVisible(true);
+              }}
+            >
               Atualizar
             </Button>
           </Space>
@@ -110,9 +131,16 @@ function Companies() {
     },
   ];
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setOnlyUser({
+      ...onlyUser,
+      [name]: value,
+    });
+  };
+
   return (
     <>
-      {console.log(tableInfo)}
       <Container>
         <Table columns={columns} dataSource={tableInfo} />
         <Modal
@@ -121,10 +149,36 @@ function Companies() {
           onOk={() => setIsModalVisible(false)}
           onCancel={() => setIsModalVisible(false)}
         >
-          <Input name="name" placeholder="Nome" />
-          <Input name="email" placeholder="Email" />
-          <Input name="unitId" placeholder="Unidade" />
-          <Input name="companyId" placeholder="Empresa" />
+          <InputContent
+            action="https://my-json-server.typicode.com/tractian/fake-api/users/1"
+            method="PUT"
+          >
+            <Input value={onlyUser.id} type="hidden" />
+            <Input
+              value={onlyUser.name}
+              onChange={handleChange}
+              name="name"
+              placeholder="Nome"
+            />
+            <Input
+              onChange={handleChange}
+              value={onlyUser.email}
+              name="email"
+              placeholder="Email"
+            />
+            <Input
+              onChange={handleChange}
+              value={onlyUser.unity}
+              name="unitId"
+              placeholder="Unidade"
+            />
+            <Input
+              onChange={handleChange}
+              value={onlyUser.company}
+              name="companyId"
+              placeholder="Empresa"
+            />
+          </InputContent>
         </Modal>
       </Container>
     </>
